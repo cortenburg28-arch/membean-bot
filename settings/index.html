@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Membean Bot — Einstellungen</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --surface: #1a2332;
+      --surface2: #243044;
+      --border: #2d3a4f;
+      --text: #e7ecf3;
+      --muted: #8b9cb3;
+      --accent: #5b9cf5;
+      --accent-hover: #7ab0ff;
+      --success: #3dd68c;
+      --danger: #f07178;
+      --radius: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header h1 { font-size: 1.35rem; font-weight: 600; }
+    header p { color: var(--muted); font-size: 0.9rem; margin-top: 0.25rem; }
+
+    .toolbar {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+      align-items: center;
+    }
+
+    main {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 1.5rem 2rem 3rem;
+    }
+
+    section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    section h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem 1.5rem;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 0.35rem;
+    }
+
+    .field .hint {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 0.55rem 0.75rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent);
+    }
+
+    .range-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .range-value {
+      min-width: 3.5rem;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding-top: 0.25rem;
+    }
+
+    .checkbox-row input { width: 1.1rem; height: 1.1rem; accent-color: var(--accent); }
+
+    button {
+      padding: 0.55rem 1.1rem;
+      border-radius: 6px;
+      border: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #0f1419;
+    }
+    .btn-primary:hover { background: var(--accent-hover); }
+
+    .btn-secondary {
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { background: var(--border); }
+
+    .btn-preset {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      font-size: 0.8rem;
+      padding: 0.4rem 0.75rem;
+    }
+    .btn-preset:hover { color: var(--text); border-color: var(--accent); }
+
+    #toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.25s;
+      pointer-events: none;
+      z-index: 100;
+    }
+    #toast.show { opacity: 1; transform: translateY(0); }
+    #toast.ok { border-color: var(--success); }
+    #toast.err { border-color: var(--danger); }
+
+    .pair-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .full-width { grid-column: 1 / -1; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Membean Bot — Einstellungen</h1>
+    <p>Änderungen werden in <code>.env</code> gespeichert. Bot neu starten, damit Werte greifen.</p>
+    <div class="toolbar">
+      <button type="button" class="btn-primary" id="saveBtn">Speichern</button>
+      <button type="button" class="btn-secondary" id="reloadBtn">Neu laden</button>
+      <span style="color: var(--muted); font-size: 0.85rem;">Presets:</span>
+      <button type="button" class="btn-preset" data-preset="fast">Schnell</button>
+      <button type="button" class="btn-preset" data-preset="normal">Normal</button>
+      <button type="button" class="btn-preset" data-preset="human">Menschlich</button>
+      <button type="button" class="btn-preset" data-preset="slow">Sehr langsam</button>
+    </div>
+  </header>
+
+  <main>
+    <form id="settingsForm">
+      <section>
+        <h2>KI</h2>
+        <div class="grid">
+          <div class="field">
+            <label for="AI_PROVIDER">Provider</label>
+            <select id="AI_PROVIDER" name="AI_PROVIDER">
+              <option value="groq">Groq</option>
+              <option value="lmstudio">LM Studio (lokal)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="ANSWER_MODE">Antwort-Modus</label>
+            <select id="ANSWER_MODE" name="ANSWER_MODE">
+              <option value="ai">ai — immer KI</option>
+              <option value="context">context — aus Lernseite</option>
+              <option value="hybrid">hybrid</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="AI_PROMPT_STYLE">KI-Prompt (Tokens)</label>
+            <select id="AI_PROMPT_STYLE" name="AI_PROMPT_STYLE">
+              <option value="compact">compact — ~60 Tokens (Standard)</option>
+              <option value="ultra">ultra — ~20 Tokens (sparen)</option>
+              <option value="standard">standard — ~100 Tokens (genauer)</option>
+            </select>
+            <div class="hint">compact = Standard. ultra zum Token-Sparen bei geteiltem API-Key.</div>
+          </div>
+          <div class="field full-width">
+            <label for="AI_API_URL">API URL</label>
+            <input type="text" id="AI_API_URL" name="AI_API_URL">
+          </div>
+          <div class="field">
+            <label for="AI_MODEL">Modell</label>
+            <input type="text" id="AI_MODEL" name="AI_MODEL">
+          </div>
+          <div class="field full-width">
+            <label for="AI_API_KEY">API Key</label>
+            <input type="password" id="AI_API_KEY" name="AI_API_KEY" autocomplete="off">
+            <div class="hint">Groq-Key von console.groq.com</div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Membean</h2>
+        <div class="grid">
+          <div class="field">
+            <label for="MEMBEAN_DASHBOARD_URL">Dashboard URL</label>
+            <input type="text" id="MEMBEAN_DASHBOARD_URL" name="MEMBEAN_DASHBOARD_URL">
+          </div>
+          <div class="field">
+            <label for="SESSION_DURATION_MINUTES">Session-Dauer (Minuten)</label>
+            <select id="SESSION_DURATION_MINUTES" name="SESSION_DURATION_MINUTES">
+              <option value="5">5 min</option>
+              <option value="10">10 min</option>
+              <option value="15">15 min</option>
+              <option value="20">20 min</option>
+              <option value="25">25 min</option>
+              <option value="30">30 min</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Auto-Start vom Dashboard</label>
+            <div class="checkbox-row">
+              <input type="checkbox" id="AUTO_START_TRAINING" name="AUTO_START_TRAINING" checked>
+              <label for="AUTO_START_TRAINING" style="margin:0;font-weight:400">Start Training + Dauer automatisch</label>
+            </div>
+          </div>
+          <div class="field">
+            <label for="MEMBEAN_HOME_URL">Home URL</label>
+            <input type="text" id="MEMBEAN_HOME_URL" name="MEMBEAN_HOME_URL">
+          </div>
+          <div class="field">
+            <label for="MEMBEAN_TRAINING_URL">Training URL (optional, nur ohne Auto-Start)</label>
+            <input type="text" id="MEMBEAN_TRAINING_URL" name="MEMBEAN_TRAINING_URL" placeholder="leer = aus Session">
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Browser</h2>
+        <div class="grid">
+          <div class="field">
+            <label>Headless (unsichtbar)</label>
+            <div class="checkbox-row">
+              <input type="checkbox" id="HEADLESS" name="HEADLESS">
+              <label for="HEADLESS" style="margin:0;font-weight:400">Browser verstecken (nicht empfohlen)</label>
+            </div>
+          </div>
+          <div class="field">
+            <label for="BROWSER_SLOW_MO">Slow-Mo (ms)</label>
+            <input type="number" id="BROWSER_SLOW_MO" name="BROWSER_SLOW_MO" min="0" max="500" step="10">
+            <div class="hint">Playwright-Verzögerung pro Aktion</div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Allgemeine Pausen (Sekunden)</h2>
+        <div class="grid">
+          <div class="field">
+            <div class="pair-label">Pause zwischen Aktionen</div>
+            <label for="DELAY_MIN">Minimum</label>
+            <input type="number" id="DELAY_MIN" name="DELAY_MIN" min="0" max="30" step="0.1">
+          </div>
+          <div class="field">
+            <label for="DELAY_MAX">Maximum</label>
+            <input type="number" id="DELAY_MAX" name="DELAY_MAX" min="0" max="30" step="0.1">
+          </div>
+          <div class="field">
+            <div class="pair-label">Lesepause</div>
+            <label for="READ_PAUSE_MIN">Minimum</label>
+            <input type="number" id="READ_PAUSE_MIN" name="READ_PAUSE_MIN" min="0" max="60" step="0.5">
+          </div>
+          <div class="field">
+            <label for="READ_PAUSE_MAX">Maximum</label>
+            <input type="number" id="READ_PAUSE_MAX" name="READ_PAUSE_MAX" min="0" max="60" step="0.5">
+          </div>
+          <div class="field">
+            <div class="pair-label">Denk-Pause vor Quiz</div>
+            <label for="THINK_PAUSE_MIN">Minimum</label>
+            <input type="number" id="THINK_PAUSE_MIN" name="THINK_PAUSE_MIN" min="0" max="30" step="0.1">
+          </div>
+          <div class="field">
+            <label for="THINK_PAUSE_MAX">Maximum</label>
+            <input type="number" id="THINK_PAUSE_MAX" name="THINK_PAUSE_MAX" min="0" max="30" step="0.1">
+          </div>
+          <div class="field">
+            <div class="pair-label">Pause nach Seitenwechsel</div>
+            <label for="PAGE_TRANSITION_MIN">Minimum</label>
+            <input type="number" id="PAGE_TRANSITION_MIN" name="PAGE_TRANSITION_MIN" min="0" max="20" step="0.1">
+          </div>
+          <div class="field">
+            <label for="PAGE_TRANSITION_MAX">Maximum</label>
+            <input type="number" id="PAGE_TRANSITION_MAX" name="PAGE_TRANSITION_MAX" min="0" max="20" step="0.1">
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Quiz & Learn</h2>
+        <div class="grid">
+          <div class="field full-width">
+            <label for="QUIZ_TARGET_ACCURACY">Ziel-Genauigkeit MCQ/Learn</label>
+            <div class="range-row">
+              <input type="range" id="QUIZ_TARGET_ACCURACY" name="QUIZ_TARGET_ACCURACY"
+                     min="50" max="100" step="1">
+              <span class="range-value" id="quizAccLabel">100%</span>
+            </div>
+            <div class="hint">Anteil richtiger Quiz-Antworten. 100 = immer KI-Antwort. 87 = ca. 87 % richtig, Rest absichtlich falsch.</div>
+          </div>
+          <div class="field">
+            <label for="LEARN_PAGE_WAIT">Learn-Seite warten (s)</label>
+            <input type="number" id="LEARN_PAGE_WAIT" name="LEARN_PAGE_WAIT" min="0" max="20" step="0.5">
+          </div>
+          <div class="field">
+            <label for="QUIZ_AFTER_ANSWER_WAIT">Nach Quiz-Antwort (s)</label>
+            <input type="number" id="QUIZ_AFTER_ANSWER_WAIT" name="QUIZ_AFTER_ANSWER_WAIT" min="0" max="20" step="0.5">
+          </div>
+          <div class="field">
+            <div class="pair-label">Quiz laden warten</div>
+            <label for="QUIZ_LOAD_WAIT_MIN">Minimum (s)</label>
+            <input type="number" id="QUIZ_LOAD_WAIT_MIN" name="QUIZ_LOAD_WAIT_MIN" min="0" max="30" step="0.5">
+          </div>
+          <div class="field">
+            <label for="QUIZ_LOAD_WAIT_MAX">Maximum (s)</label>
+            <input type="number" id="QUIZ_LOAD_WAIT_MAX" name="QUIZ_LOAD_WAIT_MAX" min="0" max="30" step="0.5">
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Tippen (Spell)</h2>
+        <div class="grid">
+          <div class="field">
+            <div class="pair-label">Vor dem Tippen</div>
+            <label for="SPELL_PAUSE_BEFORE_MIN">Minimum (s)</label>
+            <input type="number" id="SPELL_PAUSE_BEFORE_MIN" name="SPELL_PAUSE_BEFORE_MIN" min="0" max="20" step="0.1">
+          </div>
+          <div class="field">
+            <label for="SPELL_PAUSE_BEFORE_MAX">Maximum (s)</label>
+            <input type="number" id="SPELL_PAUSE_BEFORE_MAX" name="SPELL_PAUSE_BEFORE_MAX" min="0" max="20" step="0.1">
+          </div>
+          <div class="field">
+            <div class="pair-label">Nach dem Tippen</div>
+            <label for="SPELL_PAUSE_AFTER_MIN">Minimum (s)</label>
+            <input type="number" id="SPELL_PAUSE_AFTER_MIN" name="SPELL_PAUSE_AFTER_MIN" min="0" max="10" step="0.1">
+          </div>
+          <div class="field">
+            <label for="SPELL_PAUSE_AFTER_MAX">Maximum (s)</label>
+            <input type="number" id="SPELL_PAUSE_AFTER_MAX" name="SPELL_PAUSE_AFTER_MAX" min="0" max="10" step="0.1">
+          </div>
+          <div class="field">
+            <div class="pair-label">Verzögerung pro Zeichen (ms)</div>
+            <label for="TYPE_DELAY_MIN_MS">Minimum</label>
+            <input type="number" id="TYPE_DELAY_MIN_MS" name="TYPE_DELAY_MIN_MS" min="20" max="500" step="5">
+          </div>
+          <div class="field">
+            <label for="TYPE_DELAY_MAX_MS">Maximum</label>
+            <input type="number" id="TYPE_DELAY_MAX_MS" name="TYPE_DELAY_MAX_MS" min="20" max="500" step="5">
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Survey (Zwischenfragen)</h2>
+        <div class="grid">
+          <div class="field full-width">
+            <label for="SURVEY_REALISTIC_PERCENT">Survey — realistische Antworten</label>
+            <div class="range-row">
+              <input type="range" id="SURVEY_REALISTIC_PERCENT" name="SURVEY_REALISTIC_PERCENT"
+                     min="50" max="100" step="1">
+              <span class="range-value" id="surveyPctLabel">95%</span>
+            </div>
+            <div class="hint">Nur für Zwischenfragen (nicht MCQ!). Anteil „normal/mittiger" Survey-Antworten.</div>
+          </div>
+        </div>
+      </section>
+    </form>
+  </main>
+
+  <div id="toast"></div>
+
+  <script>
+    const PRESETS = {
+      fast: {
+        DELAY_MIN: 0.3, DELAY_MAX: 0.8,
+        READ_PAUSE_MIN: 0.5, READ_PAUSE_MAX: 1.5,
+        THINK_PAUSE_MIN: 0.3, THINK_PAUSE_MAX: 0.8,
+        PAGE_TRANSITION_MIN: 0.2, PAGE_TRANSITION_MAX: 0.5,
+        TYPE_DELAY_MIN_MS: 50, TYPE_DELAY_MAX_MS: 120,
+        QUIZ_TARGET_ACCURACY: 100,
+        SURVEY_REALISTIC_PERCENT: 90,
+      },
+      normal: {
+        DELAY_MIN: 0.8, DELAY_MAX: 2.5,
+        READ_PAUSE_MIN: 2, READ_PAUSE_MAX: 5,
+        THINK_PAUSE_MIN: 1, THINK_PAUSE_MAX: 3,
+        PAGE_TRANSITION_MIN: 0.5, PAGE_TRANSITION_MAX: 1.5,
+        TYPE_DELAY_MIN_MS: 90, TYPE_DELAY_MAX_MS: 220,
+        QUIZ_TARGET_ACCURACY: 100,
+        SURVEY_REALISTIC_PERCENT: 95,
+      },
+      human: {
+        DELAY_MIN: 1.2, DELAY_MAX: 3.5,
+        READ_PAUSE_MIN: 3, READ_PAUSE_MAX: 7,
+        THINK_PAUSE_MIN: 1.5, THINK_PAUSE_MAX: 4,
+        PAGE_TRANSITION_MIN: 0.8, PAGE_TRANSITION_MAX: 2,
+        TYPE_DELAY_MIN_MS: 110, TYPE_DELAY_MAX_MS: 280,
+        QUIZ_TARGET_ACCURACY: 87,
+        SURVEY_REALISTIC_PERCENT: 95,
+      },
+      slow: {
+        DELAY_MIN: 2, DELAY_MAX: 5,
+        READ_PAUSE_MIN: 5, READ_PAUSE_MAX: 10,
+        THINK_PAUSE_MIN: 2, THINK_PAUSE_MAX: 6,
+        PAGE_TRANSITION_MIN: 1.5, PAGE_TRANSITION_MAX: 3,
+        TYPE_DELAY_MIN_MS: 150, TYPE_DELAY_MAX_MS: 350,
+        QUIZ_TARGET_ACCURACY: 85,
+        SURVEY_REALISTIC_PERCENT: 98,
+      },
+    };
+
+    const surveySlider = document.getElementById("SURVEY_REALISTIC_PERCENT");
+    const surveyLabel = document.getElementById("surveyPctLabel");
+    const quizAccSlider = document.getElementById("QUIZ_TARGET_ACCURACY");
+    const quizAccLabel = document.getElementById("quizAccLabel");
+
+    surveySlider.addEventListener("input", () => {
+      surveyLabel.textContent = surveySlider.value + "%";
+    });
+
+    quizAccSlider.addEventListener("input", () => {
+      quizAccLabel.textContent = quizAccSlider.value + "%";
+    });
+
+    function toast(msg, ok = true) {
+      const el = document.getElementById("toast");
+      el.textContent = msg;
+      el.className = "show " + (ok ? "ok" : "err");
+      setTimeout(() => el.classList.remove("show"), 2800);
+    }
+
+    function applyToForm(data) {
+      for (const [key, value] of Object.entries(data)) {
+        const el = document.getElementById(key);
+        if (!el) continue;
+        if (el.type === "checkbox") {
+          el.checked = !!value;
+        } else {
+          el.value = value ?? "";
+        }
+      }
+      surveyLabel.textContent = surveySlider.value + "%";
+      quizAccLabel.textContent = quizAccSlider.value + "%";
+    }
+
+    function collectForm() {
+      const form = document.getElementById("settingsForm");
+      const data = {};
+      for (const el of form.querySelectorAll("input, select")) {
+        if (!el.name) continue;
+        if (el.type === "checkbox") {
+          data[el.name] = el.checked;
+        } else if (el.type === "number" || el.type === "range") {
+          data[el.name] = el.value === "" ? 0 : Number(el.value);
+        } else {
+          data[el.name] = el.value;
+        }
+      }
+      return data;
+    }
+
+    async function loadSettings() {
+      const res = await fetch("/api/settings");
+      const json = await res.json();
+      if (!json.ok) throw new Error(json.message || "Laden fehlgeschlagen");
+      applyToForm(json.settings);
+    }
+
+    async function saveSettings() {
+      const data = collectForm();
+      const res = await fetch("/api/settings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const json = await res.json();
+      if (!json.ok) throw new Error(json.message || "Speichern fehlgeschlagen");
+      toast("Gespeichert in .env");
+    }
+
+    document.getElementById("saveBtn").addEventListener("click", () => {
+      saveSettings().catch(e => toast(e.message, false));
+    });
+
+    document.getElementById("reloadBtn").addEventListener("click", () => {
+      loadSettings().then(() => toast("Neu geladen")).catch(e => toast(e.message, false));
+    });
+
+    document.querySelectorAll("[data-preset]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const preset = PRESETS[btn.dataset.preset];
+        if (preset) applyToForm(preset);
+      });
+    });
+
+    loadSettings().catch(e => toast(e.message, false));
+  </script>
+</body>
+</html>

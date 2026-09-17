@@ -1,0 +1,9 @@
+venv/
+.env
+storage_state.json
+session_meta.json
+logs/
+__pycache__/
+*.pyc
+.DS_Store
+screenshots/
