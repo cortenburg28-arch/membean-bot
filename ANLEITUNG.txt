@@ -1,125 +1,187 @@
 ================================================================================
-  MEMBEAN BOT — SETUP GUIDE (Deutsch)
-  Ordner: Desktop / "englisch word widows"
-  Funktioniert auf Windows UND Mac.
+  MEMBEAN BOT — SETUP GUIDE
+  Works on Windows and Mac.
 ================================================================================
 
-ORDNER-INHALT
--------------
-   Desktop
-     └── englisch word widows
-           ├── start.bat         <- Doppelklick (Windows)
-           ├── setup.bat         <- Einmal-Setup (Windows)
-           ├── start.command     <- Doppelklick (Mac)
-           ├── ANLEITUNG.txt
-           ├── main.py
-           └── ...
+DOWNLOAD (no GitHub login needed)
+---------------------------------
+   https://github.com/cortenburg28-arch/membean-bot/archive/refs/heads/main.zip
+
+   Unzip -> open the folder -> follow WINDOWS steps below.
+
+
+FOLDER CONTENTS
+---------------
+   membean-bot/
+     ├── start.bat         <- double-click to run (Windows)
+     ├── setup.bat         <- one-time setup (Windows)
+     ├── start.command     <- double-click to run (Mac)
+     ├── ANLEITUNG.txt
+     ├── main.py
+     └── ...
 
 
 ================================================================================
-  WINDOWS — EINMAL-SETUP (ca. 10 Minuten)
+  WINDOWS — ONE-TIME SETUP (~10 minutes)
 ================================================================================
 
-1. Python installieren (falls noch nicht vorhanden):
-   https://www.python.org/downloads/
-   WICHTIG: Beim Installieren "Add python.exe to PATH" ankreuzen!
+1. Install Python (pick ONE method):
 
-2. Den ganzen Ordner "englisch word widows" auf den Desktop legen.
+   A) Terminal — no website (recommended):
+      winget install Python.Python.3.12
 
-3. Doppelklick auf:
+   B) Website:
+      https://www.python.org/downloads/
+      IMPORTANT: check "Add python.exe to PATH" during install!
+
+2. Put the project folder on your Desktop (or anywhere you like).
+
+3. One-time setup — double-click:
       setup.bat
 
-   Das installiert automatisch alle Pakete und Chromium.
+   Or in Command Prompt (cmd):
 
-4. API-Key:
-   - .env Datei im Ordner oeffnen (Notepad)
-   - Falls .env fehlt: .env.example kopieren und in .env umbenennen
-   - AI_API_KEY=... eintragen (Christoph gibt den Key)
-
-5. Membean-Login:
-   - Doppelklick auf start.bat
-   - [2] Bei Membean einloggen
-   - Im Browser mit DEINEM Membean-Konto einloggen
-   - Auf dem Dashboard bleiben, Enter im Terminal druecken
-
-
-WINDOWS — JEDEN TAG
--------------------
-   Einfachste Methode:
-      Doppelklick auf start.bat
-
-   Oder in der Eingabeaufforderung (cmd):
-
-      cd %USERPROFILE%\Desktop\"englisch word widows"
+      cd %USERPROFILE%\Desktop\membean-bot
+      python -m venv venv
       venv\Scripts\activate.bat
-      python main.py
+      python -m pip install --upgrade pip
+      pip install -r requirements.txt
+      playwright install chromium
+      copy .env.example .env
+
+4. API key:
+   - Open .env in Notepad
+   - Set: AI_API_KEY=...  (Christoph sends the key privately)
+   - Do NOT commit or upload .env to GitHub
+
+5. Membean login:
+   - Double-click start.bat
+   - Press [2] Log in to Membean
+   - Log in with YOUR Membean account in the browser
+   - Stay on the dashboard, press Enter in the terminal
+
+
+WINDOWS — EVERY DAY
+-------------------
+   Easiest:
+      double-click start.bat
+
+   Or in Command Prompt (cmd) — copy all 3 lines:
+
+      cd %USERPROFILE%\Desktop\membean-bot
+      venv\Scripts\activate.bat
+      python main.py start
+
+
+WINDOWS — ALL TERMINAL COMMANDS (English)
+-----------------------------------------
+   Menu (recommended):
+      python main.py start
+
+   Log in to Membean:
+      python main.py login
+
+   Check saved session:
+      python main.py verify
+
+   Test AI:
+      python main.py test-ai
+
+   Start training (full auto):
+      python main.py run
+
+   Pick session length first:
+      python main.py run --ask-duration
+
+   Fixed 15-minute session:
+      python main.py run --minutes 15
+
+   Settings (web UI):
+      python main.py settings
+
+   Stop:
+      Ctrl+C
+
+
+WINDOWS — PowerShell (instead of cmd)
+-------------------------------------
+      cd "$env:USERPROFILE\Desktop\membean-bot"
+      .\venv\Scripts\Activate.ps1
+      python main.py start
+
+   If Activate.ps1 is blocked:
+      Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
 
 
 ================================================================================
-  MAC — EINMAL-SETUP
+  MAC — ONE-TIME SETUP
 ================================================================================
 
-1. Ordner auf den Desktop legen.
+1. Put the folder on your Desktop.
 
-2. Terminal oeffnen und einfuegen:
+2. Terminal:
 
-   cd ~/Desktop/"englisch word widows"
-   python3 -m venv venv
-   source venv/bin/activate
-   pip install -r requirements.txt
-   playwright install chromium
+      cd ~/Desktop/membean-bot
+      python3 -m venv venv
+      source venv/bin/activate
+      pip install -r requirements.txt
+      playwright install chromium
+      cp .env.example .env
 
-3. .env mit AI_API_KEY fuellen (siehe Windows Schritt 4).
+3. Add AI_API_KEY to .env (see Windows step 4).
 
-4. Login wie oben — start.command oder:
-   source venv/bin/activate && python main.py start
+4. Login: double-click start.command, or:
+
+      source venv/bin/activate && python main.py start
 
 
-MAC — JEDEN TAG
+MAC — EVERY DAY
 ---------------
-   Doppelklick auf start.command
-   (Falls blockiert: Rechtsklick -> Oeffnen -> Oeffnen)
+   Double-click start.command
+   (If blocked: right-click -> Open -> Open)
 
 
 ================================================================================
-  MENUE (Windows + Mac)
+  MENU (Windows + Mac)
 ================================================================================
 
-   [1]  Training starten
-   [2]  Bei Membean einloggen (wenn Session abgelaufen)
-   [3]  Einstellungen (Browser)
-   [4]  KI testen
-   [5]  Wortliste anzeigen
-   [0]  Beenden
+   [1]  Start training
+   [2]  Log in to Membean (if session expired)
+   [3]  Settings (browser)
+   [4]  Test AI
+   [5]  Show word list
+   [0]  Quit
 
-   Session-Dauer bei [1]: 5, 10, 15, 20, 25 oder 30 Minuten
-   Stoppen: Ctrl+C im Terminal — Browser waehrend Training nicht schliessen!
+   Session length at [1]: 5, 10, 15, 20, 25, or 30 minutes
+   Do NOT close the browser during training.
 
 
-WORTLISTE
+WORD LIST
 ---------
-   englisch word widows/worter.txt
+   membean-bot/worter.txt
 
 
-FEHLERBEHEBUNG — WINDOWS
-------------------------
-   "Python nicht gefunden"     -> Python installieren + PATH ankreuzen
-   "venv fehlt"                -> setup.bat ausfuehren
-   Session abgelaufen          -> Menue [2] Login
-   KI funktioniert nicht       -> Menue [4], AI_API_KEY in .env pruefen
-   start.bat schliesst sofort  -> setup.bat zuerst ausfuehren
+TROUBLESHOOTING — WINDOWS
+-------------------------
+   "Python not found"          -> install Python, check PATH, reopen terminal
+   "venv missing"              -> run setup.bat
+   Session expired             -> menu [2] Log in again
+   AI not working              -> menu [4], check AI_API_KEY in .env
+   start.bat closes instantly  -> run setup.bat first
+   winget not found            -> use python.org installer (step 1B)
 
 
-FEHLERBEHEBUNG — MAC
---------------------
-   start.command blockiert     -> Rechtsklick -> Oeffnen
-   "venv not found"            -> Mac-Einmal-Setup Schritt 2
+TROUBLESHOOTING — MAC
+---------------------
+   start.command blocked       -> right-click -> Open
+   "venv not found"            -> Mac one-time setup step 2
 
 
-WICHTIG
--------
-   - Gleicher API-Key wie Christoph = gemeinsames Groq-Kontingent
-   - Jede Person braucht EIGENEN Membean-Login
-   - Browser waehrend Session nicht schliessen
+IMPORTANT
+---------
+   - Shared API key with Christoph = shared Groq quota
+   - Each person needs their OWN Membean login
+   - Do not close the browser during a session
+   - Never upload .env or storage_state.json to GitHub
 
 ================================================================================
