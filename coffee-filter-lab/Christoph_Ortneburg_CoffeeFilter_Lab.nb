@@ -1,0 +1,438 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 14.0' *)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+
+Cell["Falling coffee filters and terminal velocity", "Title"],
+
+Cell["Four filters, one finish line", "Subtitle"],
+
+Cell["\<\
+Christoph Ortneburg
+Partner: C Block lab group (shared final-data sheet)
+
+Dates: 2026, C Block coffee filter lab\
+\>", "Subsubtitle"],
+
+Cell["\<\
+Working with stacked coffee filters we collected distance and time data that \
+allowed us to compute the terminal velocity for four filters.  My group and I \
+used motion data (position versus time) for four repeated drops of a 4.6655 \
+gram (g) stack.  We found a mean terminal velocity of 2.6471 meters/second \
+(m/s), with a largest percent difference from the mean of 2.51 percent (%) \
+(0.0251 as a fraction on the final-data sheet).  My R-squared values were all \
+at least 0.998, and the residual plots show no strong pattern.\
+\>", "Text"],
+
+Cell[CellGroupData[{
+
+Cell["Table 1: terminal-region fits for each trial CO", "Section"],
+
+Cell[BoxData[GridBox[{
+   {"trial", 
+    RowBox[{"terminal", " ", "velocity", " ", 
+     RowBox[{"(", 
+      RowBox[{"m", "/", "s"}], ")"}]}], 
+    SuperscriptBox["R", "2"], 
+    RowBox[{"points", " ", "in", " ", "fit", " ", "window"}]},
+   {"1", "2.6333", "0.9993", "73"},
+   {"2", "2.6090", "0.9984", "73"},
+   {"3", "2.7135", "0.9994", "73"},
+   {"4", "2.6328", "0.9993", "73"}
+  },
+  GridBoxDividers->{
+   "Columns" -> {{True}}, "Rows" -> {{True}}}]], "Text"],
+
+Cell["\<\
+Comments on table:
+
+\[Bullet] Mass for this run (from the final-data sheet): 4.6655 g for 4 \
+filters.
+\[Bullet] Fit window matches the spreadsheet Slope ranges (rows 61\[Dash]133), \
+after the short acceleration phase and before the filters stop.
+\[Bullet] Distance is recorded as positive downward displacement in meters (m).\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"Get", "[", 
+   RowBox[{"FileNameJoin", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"NotebookDirectory", "[", "]"}], ",", 
+      "\"\<christoph_data.wl\>\""}], "}"}], "]"}], "]"}], ";"}]], "Input"],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"nFilters", "=", "4"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"massGrams", "=", "4.6655"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"trialNames", "=", 
+   RowBox[{"Keys", "[", "rawTrials", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"selectTerminal", "[", "pairs_", "]"}], ":=", 
+   RowBox[{"pairs", "[", 
+    RowBox[{"[", 
+     RowBox[{"59", ";;", 
+      RowBox[{"Min", "[", 
+       RowBox[{"131", ",", 
+        RowBox[{"Length", "[", "pairs", "]"}]}], "]"}]}], "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"model1", "=", 
+   RowBox[{"LinearModelFit", "[", 
+    RowBox[{
+     RowBox[{"selectTerminal", "[", 
+      RowBox[{"rawTrials", "[", "\"\<trial1\>\"", "]"}], "]"}], ",", "t", ",",
+      "t"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"model2", "=", 
+   RowBox[{"LinearModelFit", "[", 
+    RowBox[{
+     RowBox[{"selectTerminal", "[", 
+      RowBox[{"rawTrials", "[", "\"\<trial2\>\"", "]"}], "]"}], ",", "t", ",",
+      "t"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"model3", "=", 
+   RowBox[{"LinearModelFit", "[", 
+    RowBox[{
+     RowBox[{"selectTerminal", "[", 
+      RowBox[{"rawTrials", "[", "\"\<trial3\>\"", "]"}], "]"}], ",", "t", ",",
+      "t"}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"model4", "=", 
+   RowBox[{"LinearModelFit", "[", 
+    RowBox[{
+     RowBox[{"selectTerminal", "[", 
+      RowBox[{"rawTrials", "[", "\"\<trial4\>\"", "]"}], "]"}], ",", "t", ",",
+      "t"}], "]"}]}], ";"}]}], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"line", "=", 
+   RowBox[{"Plot", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"model1", "[", "\"\<BestFit\>\"", "]"}], ",", 
+       RowBox[{"model2", "[", "\"\<BestFit\>\"", "]"}], ",", 
+       RowBox[{"model3", "[", "\"\<BestFit\>\"", "]"}], ",", 
+       RowBox[{"model4", "[", "\"\<BestFit\>\"", "]"}]}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"t", ",", "1.0", ",", "2.26"}], "}"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"Axes", "\[Rule]", "None"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"PlotStyle", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"Orange", ",", "Pink", ",", "Purple", ",", "Brown"}], "}"}]}], 
+     ",", "\[IndentingNewLine]", 
+     RowBox[{"PlotLegends", "\[Rule]", 
+      RowBox[{"LineLegend", "[", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"Orange", ",", "Pink", ",", "Purple", ",", "Brown"}], "}"}], 
+        ",", 
+        RowBox[{"{", 
+         RowBox[{
+         "\"\<Trial 1 trendline\>\"", ",", "\"\<Trial 2 trendline\>\"", ",", 
+          "\"\<Trial 3 trendline\>\"", ",", "\"\<Trial 4 trendline\>\""}], 
+         "}"}], ",", 
+        RowBox[{"LegendFunction", "\[Rule]", "\"\<Frame\>\""}]}], "]"}]}], 
+     ",", "\[IndentingNewLine]", 
+     RowBox[{"ImageSize", "\[Rule]", "Large"}]}], "]"}]}], ";"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"points", "=", 
+   RowBox[{"ListPlot", "[", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"selectTerminal", "[", 
+        RowBox[{"rawTrials", "[", "\"\<trial1\>\"", "]"}], "]"}], ",", 
+       RowBox[{"selectTerminal", "[", 
+        RowBox[{"rawTrials", "[", "\"\<trial2\>\"", "]"}], "]"}], ",", 
+       RowBox[{"selectTerminal", "[", 
+        RowBox[{"rawTrials", "[", "\"\<trial3\>\"", "]"}], "]"}], ",", 
+       RowBox[{"selectTerminal", "[", 
+        RowBox[{"rawTrials", "[", "\"\<trial4\>\"", "]"}], "]"}]}], "}"}], ",",
+      "\[IndentingNewLine]", 
+     RowBox[{"AxesLabel", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"\"\<t (s)\>\"", ",", "\"\<d (m)\>\""}], "}"}]}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+     "PlotLabel", "\[Rule]", 
+      "\"\<Distance vs. time in the terminal region CO\>\""}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"PlotStyle", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"Orange", ",", "Pink", ",", "Purple", ",", "Brown"}], "}"}]}], 
+     ",", "\[IndentingNewLine]", 
+     RowBox[{"PlotLegends", "\[Rule]", 
+      RowBox[{"PointLegend", "[", 
+       RowBox[{"Automatic", ",", 
+        RowBox[{"{", 
+         RowBox[{
+         "\"\<Trial 1\>\"", ",", "\"\<Trial 2\>\"", ",", "\"\<Trial 3\>\"", 
+          ",", "\"\<Trial 4\>\""}], "}"}], ",", 
+        RowBox[{"LegendFunction", "\[Rule]", "\"\<Frame\>\""}]}], "]"}]}], 
+     ",", "\[IndentingNewLine]", 
+     RowBox[{"ImageSize", "\[Rule]", "Large"}], ",", "\[IndentingNewLine]", 
+     RowBox[{"GridLines", "\[Rule]", "Automatic"}]}], "]"}]}], ";"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"Show", "[", 
+  RowBox[{"points", ",", "line"}], "]"}]], "Input"],
+
+Cell["\<\
+Comments on chart:
+
+\[Bullet] A legend is needed because there is more than one trial plotted on \
+the same axes.
+\[Bullet] Axes are labeled with units: time t in seconds (s) and distance d \
+in meters (m).
+\[Bullet] The title includes my initials (CO), matching the sample-lab style.
+\[Bullet] GridLines are on for the data plot (as in the sample).
+\[Bullet] The linear trendlines are the terminal-velocity regime; the slope of \
+each line is vt for that trial.\
+\>", "Text"]
+
+}, Open]],
+
+Cell[CellGroupData[{
+
+Cell["Table 2: mean vt and percent difference CO", "Section"],
+
+Cell[BoxData[GridBox[{
+   {"quantity", "value"},
+   {
+    RowBox[{"#", " ", "of", " ", "filters"}], "4"},
+   {
+    RowBox[{"mass", " ", 
+     RowBox[{"(", "g", ")"}]}], "4.6655"},
+   {
+    RowBox[{"mean", " ", 
+     SubscriptBox["v", "t"], " ", 
+     RowBox[{"(", 
+      RowBox[{"m", "/", "s"}], ")"}]}], "2.6471"},
+   {
+    RowBox[{"largest", " ", "%", " ", "difference", " ", 
+     RowBox[{"(", "fraction", ")"}]}], "0.0251"},
+   {
+    RowBox[{"largest", " ", "%", " ", "difference", " ", 
+     RowBox[{"(", "%", ")"}]}], "2.51"}
+  },
+  GridBoxDividers->{
+   "Columns" -> {{True}}, "Rows" -> {{True}}}]], "Text"],
+
+Cell["\<\
+The mean terminal velocity is the average of the four trial slopes.  The \
+percent difference reported on the final-data sheet (group A style) is the \
+largest fractional deviation of a trial from that mean.\
+\>", "Text"],
+
+Cell["\<\
+With the four trial velocities from Table 1, here is how you find the mean \
+and the largest percent difference.\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{"vtMeanCalc", "=", 
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{"2.6333", "+", "2.6090", "+", "2.7135", "+", "2.6328"}], ")"}], 
+   "/", "4"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"pctDiffFraction", "=", 
+  RowBox[{
+   RowBox[{"Abs", "[", 
+    RowBox[{"2.7135", "-", "vtMeanCalc"}], "]"}], "/", 
+   "vtMeanCalc"}]}]], "Input"],
+
+Cell["in general this can be expanded in less specific notation", "Text"],
+
+Cell[BoxData[
+ RowBox[{"vtMean", "=", 
+  RowBox[{
+   RowBox[{"(", 
+    RowBox[{"vt1", "+", "vt2", "+", "vt3", "+", "vt4"}], ")"}], "/", 
+   "4"}]}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"largestFractionDiff", "=", 
+  RowBox[{
+   RowBox[{"Max", "[", 
+    RowBox[{"Abs", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"vt1", ",", "vt2", ",", "vt3", ",", "vt4"}], "}"}], "-", 
+      "vtMean"}], "]"}], "]"}], "/", "vtMean"}]}]], "Input"],
+
+Cell["\<\
+you can see that these numbers form Table 2.  Enter mean vt in the Terminal \
+Velocity column and the fraction (0.0251) in the % difference column for \
+Christoph Ortneburg on the final-data sheet.\
+\>", "Text"]
+
+}, Open]],
+
+Cell[CellGroupData[{
+
+Cell["quality calculations", "Section"],
+
+Cell[BoxData[{
+ RowBox[{"model1", "[", "\"\<RSquared\>\"", "]"}], "\[IndentingNewLine]", 
+ RowBox[{"model2", "[", "\"\<RSquared\>\"", "]"}], "\[IndentingNewLine]", 
+ RowBox[{"model3", "[", "\"\<RSquared\>\"", "]"}], "\[IndentingNewLine]", 
+ RowBox[{"model4", "[", "\"\<RSquared\>\"", "]"}]}], "Input"],
+
+Cell[TextData[{
+ "My ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["R", "2"], TraditionalForm]]],
+ " values are close to 1 and contain at least two nines (all \[GreaterEqual] \
+0.998). Reading from the rubric this makes my ",
+ Cell[BoxData[
+  FormBox[
+   SuperscriptBox["R", "2"], TraditionalForm]]],
+ " values \[OpenCurlyDoubleQuote]acceptable.\[CloseCurlyDoubleQuote]"
+}], "Text"],
+
+Cell[BoxData[
+ RowBox[{"ListPlot", "[", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"model1", "[", "\"\<FitResiduals\>\"", "]"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"model2", "[", "\"\<FitResiduals\>\"", "]"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"model3", "[", "\"\<FitResiduals\>\"", "]"}], ",", 
+     "\[IndentingNewLine]", 
+     RowBox[{"model4", "[", "\"\<FitResiduals\>\"", "]"}]}], "}"}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"PlotLabel", "\[Rule]", "\"\<Residuals from each model CO\>\""}], 
+   ",", "\[IndentingNewLine]", 
+   RowBox[{"AxesLabel", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"\"\<data point\>\"", ",", "\"\<Difference from model\>\""}], 
+     "}"}]}], ",", "\[IndentingNewLine]", 
+   RowBox[{"Filling", "\[Rule]", "Axis"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"PlotLegends", "\[Rule]", 
+    RowBox[{"PointLegend", "[", 
+     RowBox[{"Automatic", ",", 
+      RowBox[{"{", 
+       RowBox[{
+       "\"\<model1\>\"", ",", "\"\<model2\>\"", ",", "\"\<model3\>\"", ",", 
+        "\"\<model4\>\""}], "}"}], ",", 
+      RowBox[{"LegendFunction", "\[Rule]", "\"\<Frame\>\""}]}], "]"}]}]}], 
+  "]"}]], "Input"],
+
+Cell["\<\
+My residual graph shows no strong pattern and my residual values are small \
+(all less than \[PlusMinus]0.1 m on the terminal-region fits).  These are \
+both positive indicators.\
+\>", "Text"]
+
+}, Open]],
+
+Cell[CellGroupData[{
+
+Cell["Peer data", "Section"],
+
+Cell[BoxData[GridBox[{
+   {
+    RowBox[{"#", " ", "filters"}], 
+    RowBox[{"mass", " ", 
+     RowBox[{"(", "g", ")"}]}], 
+    RowBox[{
+     SubscriptBox["v", "t"], " ", 
+     RowBox[{"(", 
+      RowBox[{"m", "/", "s"}], ")"}]}], "name"},
+   {"2", "2.351", "2.1146", 
+    RowBox[{"James", " ", "Lake"}]},
+   {"3", "3.49", "2.43525", 
+    RowBox[{"Abdul", " ", "Hakim"}]},
+   {"4", "4.6655", "2.6471", 
+    RowBox[{"Christoph", " ", "Ortneburg"}]},
+   {"5", "5.3", "2.41521", 
+    RowBox[{"James", " ", "Tian"}]}
+  },
+  GridBoxDividers->{
+   "Columns" -> {{True}}, "Rows" -> {{True}}}]], "Text"],
+
+Cell["\<\
+Peer values come from the class final-data sheet (group A).  My 4-filter \
+result sits with the other class masses; terminal velocity generally rises \
+with mass for these runs, with scatter from trial-to-trial variation.\
+\>", "Text"],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"classRows", "=", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"{", 
+      RowBox[{"2.351", ",", "2.1146"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"3.49", ",", "2.43525"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"4.6655", ",", "2.6471"}], "}"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"5.3", ",", "2.41521"}], "}"}]}], "}"}]}], ";"}]], "Input"],
+
+Cell[BoxData[
+ RowBox[{"ListPlot", "[", 
+  RowBox[{"classRows", ",", "\[IndentingNewLine]", 
+   RowBox[{"AxesLabel", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"\"\<mass (g)\>\"", ",", "\"\<vt (m/s)\>\""}], "}"}]}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{
+   "PlotLabel", "\[Rule]", 
+    "\"\<Peer data: mass vs terminal velocity CO\>\""}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"PlotStyle", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"Purple", ",", 
+      RowBox[{"PointSize", "[", "0.03", "]"}]}], "}"}]}], ",", 
+   "\[IndentingNewLine]", 
+   RowBox[{"ImageSize", "\[Rule]", "Large"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"GridLines", "\[Rule]", "Automatic"}], ",", "\[IndentingNewLine]", 
+   RowBox[{"PlotLegends", "\[Rule]", 
+    RowBox[{"PointLegend", "[", 
+     RowBox[{"Automatic", ",", 
+      RowBox[{"{", "\"\<group A peers\>\"", "}"}], ",", 
+      RowBox[{"LegendFunction", "\[Rule]", "\"\<Frame\>\""}]}], "]"}]}]}], 
+  "]"}]], "Input"],
+
+Cell["\<\
+Overall, four coffee filters of mass 4.6655 g reached a mean terminal \
+velocity of 2.6471 m/s.  The marks of quality (R^2 near 1 and unstructured \
+residuals) support treating the linear terminal region as a good model for \
+vt.  Compared with peers on the final-data sheet, the result is consistent \
+with a heavier stack falling faster once drag balances weight.\
+\>", "Text"]
+
+}, Open]]
+
+}, Open]]
+},
+WindowSize->{960, 720},
+WindowMargins->{{Automatic, 0}, {Automatic, 0}},
+FrontEndVersion->"14.0 for Mac OS X x86 (64-bit) (December 12, 2023)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
