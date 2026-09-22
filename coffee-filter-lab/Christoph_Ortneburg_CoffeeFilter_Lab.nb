@@ -35,7 +35,7 @@ Cell["After running the cell above, use the printed Grid / finalDataRow:\n• # 
 
 Cell["5. Notes", "Section"],
 
-Cell["• Fit window matches the spreadsheet (rows 61–133 ≈ 1.00–2.25 s).\n• Excel Slope formulas used Slope(time, distance); this lab correctly fits distance vs time so the slope is vt in m/s.\n• Cells AA313–AG314 were empty, which caused #DIV/0! on your final-data row — this notebook computes those values.\n• Optional class mass–vt and log–log plots are included for discussion.", "Text"]
+Cell["• Fit window matches the spreadsheet exactly (rows 61–133).\n• Excel Slope formulas used Slope(time, distance); this lab correctly fits distance vs time so the slope is vt in m/s.\n• Cells AA313–AG314 were empty, which caused #DIV/0! on your final-data row — this notebook computes those values.\n• Optional class mass–vt and log–log plots are included for discussion.", "Text"]
 
 }, WindowSize->{960, 720},
 WindowMargins->{{Automatic, 0}, {Automatic, 0}},
