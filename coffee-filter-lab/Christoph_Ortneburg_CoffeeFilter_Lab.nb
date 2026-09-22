@@ -1,0 +1,45 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* Christoph Ortneburg — Coffee Filter Lab (C Block 2026) *)
+
+Notebook[{
+
+Cell["Coffee Filter Lab: Terminal Velocity", "Title"],
+
+Cell["Christoph Ortneburg  |  C Block  |  2026  |  4 coffee filters", "Subtitle"],
+
+Cell["1. Purpose", "Section"],
+
+Cell["Measure free-fall motion of 4 stacked coffee filters and find the terminal velocity vt from the linear part of the position–time graph. Four green-highlighted trials from raw data group A (columns Z–AG) are analyzed. Results fill the final-data row for Christoph Ortneburg (mass 4.6655 g).", "Text"],
+
+Cell["2. Theory", "Section"],
+
+Cell["At terminal velocity, weight balances drag: m g = b v^n. After a short acceleration phase, y(t) is nearly linear and the slope is vt. Distance is recorded as positive downward displacement in meters.", "Text"],
+
+Cell["3. Run the analysis", "Section"],
+
+Cell["Evaluate the next cell to load your data, make plots, fit vt for each trial, and print the values for the final data sheet. Requires Christoph_Ortneburg_CoffeeFilter_Lab.wl in the same folder as this notebook.", "Text"],
+
+Cell[BoxData[
+ RowBox[{"Get", "[", 
+  RowBox[{"FileNameJoin", "[", 
+   RowBox[{"{", 
+    RowBox[{
+     RowBox[{"NotebookDirectory", "[", "]"}], ",", 
+     "\"\<Christoph_Ortneburg_CoffeeFilter_Lab.wl\>\""}], "}"}], "]"}], "]"}]], "Input"],
+
+Cell["4. What to enter on the final data sheet", "Section"],
+
+Cell["After running the cell above, use the printed Grid / finalDataRow:\n• # of filters = 4\n• Mass, (g) = 4.6655\n• Terminal Velocity, (m/s) = mean vt (~2.647 m/s)\n• your name = Christoph Ortneburg\n• your % difference (Vt) (%) = largest |vt−mean|/mean as a fraction (~0.0251), same style as James Lake / Abdul Hakim in group A", "Text"],
+
+Cell["5. Notes", "Section"],
+
+Cell["• Fit window matches the spreadsheet (rows 61–133 ≈ 1.00–2.25 s).\n• Excel Slope formulas used Slope(time, distance); this lab correctly fits distance vs time so the slope is vt in m/s.\n• Cells AA313–AG314 were empty, which caused #DIV/0! on your final-data row — this notebook computes those values.\n• Optional class mass–vt and log–log plots are included for discussion.", "Text"]
+
+}, WindowSize->{960, 720},
+WindowMargins->{{Automatic, 0}, {Automatic, 0}},
+FrontEndVersion->"14.0 for Mac OS X x86 (64-bit)",
+StyleDefinitions->"Default.nb"
+]
+*)
